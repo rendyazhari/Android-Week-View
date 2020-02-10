@@ -243,13 +243,15 @@ internal fun getDefaultDateFormat(numberOfDays: Int): SimpleDateFormat {
     return when (numberOfDays) {
         1 -> SimpleDateFormat("EEEE M/dd", Locale.getDefault()) // full weekday
         in 2..6 -> SimpleDateFormat("EEE M/dd", Locale.getDefault()) // first three characters
-        else -> SimpleDateFormat("EEEEE M/dd", Locale.getDefault()) // first character
+//        else -> SimpleDateFormat("EEEEE M/dd", Locale.getDefault()) // first character
+        else -> SimpleDateFormat("EEEEE", Locale.getDefault()) // first character
     }
 }
 
 internal fun getDefaultTimeFormat(is24HourFormat: Boolean): SimpleDateFormat {
-    val format = if (is24HourFormat) "HH:mm" else "hh a"
-    return SimpleDateFormat(format, Locale.getDefault())
+//    val format = if (is24HourFormat) "HH:mm" else "hh a"
+//    return SimpleDateFormat(format, Locale.getDefault())
+    return SimpleDateFormat("HH:mm", Locale.getDefault())
 }
 
 internal fun Calendar.format(

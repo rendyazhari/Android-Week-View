@@ -1,10 +1,7 @@
 package com.alamkanak.weekview
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.RectF
-import android.graphics.Typeface
+import android.graphics.*
 import android.text.SpannableStringBuilder
 import android.text.StaticLayout
 import android.text.style.StyleSpan
@@ -128,11 +125,26 @@ internal class EventChipDrawer<T>(
         val rect = checkNotNull(eventChip.bounds)
         canvas.apply {
             save()
-            translate(
-                rect.left + config.eventPaddingHorizontal,
-                rect.top + config.eventPaddingVertical
-            )
-            textLayout.draw(this)
+//            translate(
+//                rect.left + config.eventPaddingHorizontal,
+//                rect.top + config.eventPaddingVertical
+//            )
+
+            var offsetX = 0f
+            val lenght = if (rect.width() > rect.height()) {
+                offsetX = (rect.width() - rect.height()) / 2
+                rect.height()
+            } else {
+                rect.width()
+            }
+
+            rect.offset(offsetX, (rect.height() / 2) - (lenght / 2))
+            rect.bottom = rect.top + lenght
+            rect.right = rect.left + lenght
+            val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher)
+
+            drawBitmap(bitmap, null, rect, null)
+//            textLayout.draw(this)
             restore()
         }
     }
