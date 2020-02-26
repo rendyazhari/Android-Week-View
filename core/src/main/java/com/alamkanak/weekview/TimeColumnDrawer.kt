@@ -9,11 +9,13 @@ internal class TimeColumnDrawer(
 ) : CachingDrawer {
 
     private val timeLabelCache = SparseArray<String>()
+    private val halfHourTimeLableCache = SparseArray<String>()
 
     init {
         cacheTimeLabels()
     }
 
+    // TODO: Add 30 minute
     private fun cacheTimeLabels() = with(config) {
         for (hour in startHour until hoursPerDay step timeColumnHoursInterval) {
             timeLabelCache.put(hour, dateTimeInterpreter.interpretTime(hour + minHour))
@@ -49,6 +51,8 @@ internal class TimeColumnDrawer(
                 y += timeTextHeight / 2 + hourSeparatorPaint.strokeWidth + timeColumnPadding
             }
 
+            // TODO: Change with 30
+            canvas.drawText(timeLabelCache[hour], x, y - hourHeight.div(2), timeTextPaint)
             canvas.drawText(timeLabelCache[hour], x, y, timeTextPaint)
 
             if (showTimeColumnHourSeparator && hour > 0) {

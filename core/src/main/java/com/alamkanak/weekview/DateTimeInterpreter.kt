@@ -29,14 +29,12 @@ internal class DefaultDateTimeInterpreter(
         sdfDate = getDefaultDateFormat(days)
     }
 
-    override fun interpretDate(date: Calendar): String {
-        return sdfDate.format(date.time).toUpperCase(Locale.getDefault())
-    }
+    @ExperimentalStdlibApi
+    override fun interpretDate(date: Calendar): String =
+            sdfDate.format(date.time).capitalize(Locale.getDefault())
 
-    override fun interpretTime(hour: Int): String {
-        val time = calendar.withTime(hour, minutes = 0)
-        return sdfTime.format(time.time)
-    }
+    override fun interpretTime(hour: Int): String =
+            sdfTime.format(calendar.withTime(hour, minutes = 0).time)
 }
 
 internal interface DateFormatProvider {

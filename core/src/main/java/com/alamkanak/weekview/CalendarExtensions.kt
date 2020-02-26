@@ -244,7 +244,7 @@ internal fun getDefaultDateFormat(numberOfDays: Int): SimpleDateFormat {
         1 -> SimpleDateFormat("EEEE M/dd", Locale.getDefault()) // full weekday
         in 2..6 -> SimpleDateFormat("EEE M/dd", Locale.getDefault()) // first three characters
 //        else -> SimpleDateFormat("EEEEE M/dd", Locale.getDefault()) // first character
-        else -> SimpleDateFormat("EEEEE", Locale.getDefault()) // first character
+        else -> SimpleDateFormat("EEE", Locale.getDefault()) // first character
     }
 }
 
