@@ -10,7 +10,7 @@ interface DateTimeInterpreter {
         // Free ad space
     }
     fun interpretDate(date: Calendar): String
-    fun interpretTime(hour: Int): String
+    fun interpretTime(hour: Int, minute: Int = 0): String
 }
 
 internal class DefaultDateTimeInterpreter(
@@ -33,8 +33,8 @@ internal class DefaultDateTimeInterpreter(
     override fun interpretDate(date: Calendar): String =
             sdfDate.format(date.time).capitalize(Locale.getDefault())
 
-    override fun interpretTime(hour: Int): String =
-            sdfTime.format(calendar.withTime(hour, minutes = 0).time)
+    override fun interpretTime(hour: Int, minute: Int): String =
+            sdfTime.format(calendar.withTime(hour, minutes = minute).time)
 }
 
 internal interface DateFormatProvider {
