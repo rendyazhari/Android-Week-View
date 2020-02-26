@@ -1,5 +1,6 @@
 package com.alamkanak.weekview.sample.data.model
 
+import android.graphics.Bitmap
 import android.graphics.Color
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.alamkanak.weekview.WeekViewEvent
@@ -8,10 +9,9 @@ import java.util.Calendar
 
 class Event(
     val id: Long,
-    val title: String,
+    val image: Bitmap,
     private val startTime: Calendar,
     private val endTime: Calendar,
-    private val location: String,
     private val color: Int,
     private val isAllDay: Boolean,
     private val isCanceled: Boolean
@@ -32,10 +32,9 @@ class Event(
 
         return WeekViewEvent.Builder<Event>(this)
             .setId(id)
-            .setTitle(title)
+            .setImage(image)
             .setStartTime(startTime)
             .setEndTime(endTime)
-            .setLocation(location)
             .setAllDay(isAllDay)
             .setStyle(style)
             .build()

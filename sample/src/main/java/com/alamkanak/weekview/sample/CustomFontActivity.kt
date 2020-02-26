@@ -35,11 +35,11 @@ class CustomFontActivity : AppCompatActivity() {
     ) = database.getEventsInRange(startDate, endDate)
 
     private fun onEventClick(event: Event) {
-        showToast("Clicked ${event.title}")
+        showToast("Clicked ${event.id}")
     }
 
     private fun onEventLongClick(event: Event) {
-        showToast("Long-clicked ${event.title}")
+        showToast("Long-clicked ${event.id}")
     }
 
     private fun onEmptyViewLongClick(time: Calendar) {

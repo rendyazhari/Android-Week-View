@@ -1,22 +1,17 @@
 package com.alamkanak.weekview
 
 import android.graphics.RectF
-import android.graphics.Typeface
-import android.text.SpannableStringBuilder
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
 import android.text.TextUtils.TruncateAt.END
-import android.text.style.StyleSpan
-import com.alamkanak.weekview.WeekViewEvent.TextResource
 import kotlin.math.roundToInt
 
 internal class AllDayEventsUpdater<T : Any>(
     private val view: WeekView<T>,
     private val config: WeekViewConfigWrapper,
     private val cache: WeekViewCache<T>,
-    private val chipCache: EventChipCache<T>,
-    private val emojiTextProcessor: EmojiTextProcessor = EmojiTextProcessor()
+    private val chipCache: EventChipCache<T>
 ) : Updater {
 
     private val context = view.context
@@ -49,7 +44,7 @@ internal class AllDayEventsUpdater<T : Any>(
             }
         }
 
-        val maximumChipHeight = cache.allDayEventLayouts.keys
+        val maximumChipHeight = cache.allDayEventLayouts
             .mapNotNull { it.bounds }
             .map { it.height().roundToInt() }
             .max() ?: 0
@@ -63,71 +58,6 @@ internal class AllDayEventsUpdater<T : Any>(
     ) {
         val chipRect = rectCalculator.calculateAllDayEvent(eventChip, startPixel)
         eventChip.bounds = if (chipRect.isValidEventBounds) chipRect else null
-
-        if (chipRect.isValidEventBounds) {
-            val textLayout = calculateChipTextLayout(eventChip)
-            textLayout?.let { layout ->
-                cache.allDayEventLayouts[eventChip] = layout
-            }
-        }
-    }
-
-    private fun calculateChipTextLayout(
-        eventChip: EventChip<T>
-    ): StaticLayout? {
-        val event = eventChip.event
-        val bounds = checkNotNull(eventChip.bounds)
-
-        val fullHorizontalPadding = config.eventPaddingHorizontal * 2
-        val fullVerticalPadding = config.eventPaddingVertical * 2
-
-        val width = bounds.width() - fullHorizontalPadding
-        val height = bounds.height() - fullVerticalPadding
-
-        if (height < 0) {
-            return null
-        }
-
-        if (width < 0) {
-            // This happens if there are many all-day events
-            val dummyTextLayout = createDummyTextLayout(event)
-            val chipHeight = dummyTextLayout.height + fullVerticalPadding
-            bounds.bottom = bounds.top + chipHeight
-            return dummyTextLayout
-        }
-
-        val title = when (val resource = event.titleResource) {
-            is TextResource.Id -> context.getString(resource.resId)
-            is TextResource.Value -> resource.text
-            null -> ""
-        }
-
-        val modifiedTitle = emojiTextProcessor.process(title)
-        val text = SpannableStringBuilder(modifiedTitle)
-        text.setSpan(StyleSpan(Typeface.BOLD))
-
-        val location = when (val resource = event.locationResource) {
-            is TextResource.Id -> context.getString(resource.resId)
-            is TextResource.Value -> resource.text
-            null -> null
-        }
-
-        if (location != null) {
-            val modifiedLocation = emojiTextProcessor.process(location)
-            text.append(' ').append(modifiedLocation)
-        }
-
-        val availableWidth = width.toInt()
-
-        val textPaint = event.getTextPaint(context, config)
-        val textLayout = TextLayoutBuilder.build(text, textPaint, availableWidth)
-        val lineHeight = textLayout.height / textLayout.lineCount
-
-        // For an all day event, we display just one line
-        val chipHeight = lineHeight + fullVerticalPadding
-        bounds.bottom = bounds.top + chipHeight
-
-        return eventChip.ellipsizeText(text, availableWidth, existingTextLayout = textLayout)
     }
 
     /**
@@ -141,26 +71,6 @@ internal class AllDayEventsUpdater<T : Any>(
             dummyTextLayout = TextLayoutBuilder.build("", textPaint, width = 0)
         }
         return checkNotNull(dummyTextLayout)
-    }
-
-    private fun EventChip<T>.ellipsizeText(
-        text: CharSequence,
-        availableWidth: Int,
-        existingTextLayout: StaticLayout
-    ): StaticLayout {
-        val textPaint = event.getTextPaint(context, config)
-        val bounds = checkNotNull(bounds)
-        val width = bounds.width().roundToInt() - (config.eventPaddingHorizontal * 2)
-
-        val ellipsized = text.ellipsized(textPaint, availableWidth)
-        val isTooSmallForText = width < 0
-        if (isTooSmallForText) {
-            // This day contains too many all-day events. We only draw the event chips,
-            // but don't attempt to draw the event titles.
-            return existingTextLayout
-        }
-
-        return TextLayoutBuilder.build(ellipsized, textPaint, width)
     }
 
     private val RectF.isValidEventBounds: Boolean

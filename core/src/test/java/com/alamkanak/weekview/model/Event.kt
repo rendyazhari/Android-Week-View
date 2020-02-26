@@ -12,7 +12,7 @@ data class Event(
     override fun toWeekViewEvent(): WeekViewEvent<Event> {
         return WeekViewEvent.Builder(this)
             .setId(1)
-            .setTitle("")
+            .setImage("")
             .setStartTime(startTime)
             .setEndTime(endTime)
             .build()

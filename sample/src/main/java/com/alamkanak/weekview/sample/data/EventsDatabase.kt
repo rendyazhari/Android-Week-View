@@ -1,6 +1,7 @@
 package com.alamkanak.weekview.sample.data
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import androidx.core.content.ContextCompat
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.alamkanak.weekview.sample.R
@@ -9,7 +10,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-class EventsDatabase(context: Context) {
+class EventsDatabase(private val context: Context) {
 
     private val color1 = ContextCompat.getColor(context, R.color.event_color_01)
     private val color2 = ContextCompat.getColor(context, R.color.event_color_02)
@@ -205,8 +206,8 @@ class EventsDatabase(context: Context) {
         val endTime = startTime.clone() as Calendar
         endTime.add(Calendar.MINUTE, duration)
 
-        val title = buildEventTitle(startTime)
-        return Event(id, title, startTime, endTime, "Location $id", color, isAllDay, isCanceled)
+        val image = BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher)
+        return Event(id, image, startTime, endTime, color, isAllDay, isCanceled)
     }
 
     private fun buildEventTitle(time: Calendar): String {

@@ -135,8 +135,6 @@ internal class WeekViewAccessibilityTouchHelper<T : Any>(
         eventChip: EventChip<T>,
         node: AccessibilityNodeInfoCompat
     ) {
-        node.contentDescription = createDescriptionForVirtualView(eventChip.originalEvent)
-
         node.addAction(AccessibilityActionCompat.ACTION_CLICK)
         node.addAction(AccessibilityActionCompat.ACTION_LONG_CLICK)
 
@@ -166,16 +164,8 @@ internal class WeekViewAccessibilityTouchHelper<T : Any>(
         node.setBoundsInParent(bounds)
     }
 
-    private fun createDescriptionForVirtualView(event: WeekViewEvent<T>): String {
-        val date = dateTimeFormatter.format(event.startTime.time)
-        val title = checkNotNull(event.titleResource).resolve(context)
-        val location = checkNotNull(event.locationResource).resolve(context)
-        return "$date: $title, $location"
-    }
-
-    private fun createDescriptionForVirtualView(date: Calendar): String {
-        return dateFormatter.format(date.time)
-    }
+    private fun createDescriptionForVirtualView(date: Calendar): String =
+            dateFormatter.format(date.time)
 }
 
 private class VirtualViewIdStore<T> {

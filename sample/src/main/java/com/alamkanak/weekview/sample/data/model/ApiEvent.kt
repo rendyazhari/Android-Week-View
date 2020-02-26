@@ -1,8 +1,10 @@
 package com.alamkanak.weekview.sample.data.model
 
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import com.alamkanak.weekview.WeekViewDisplayable
 import com.alamkanak.weekview.WeekViewEvent
+import com.alamkanak.weekview.sample.R
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
@@ -61,7 +63,6 @@ data class ApiEvent(
 
         return WeekViewEvent.Builder(this)
             .setId(id)
-            .setTitle(title)
             .setStartTime(startTime)
             .setEndTime(endTime)
             .setAllDay(false)

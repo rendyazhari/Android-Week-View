@@ -40,13 +40,6 @@ internal class DayLabelDrawer<T>(
         if (config.singleLineHeader) {
             val y = config.headerRowPadding.toFloat() - textPaint.ascent()
             canvas.drawText(dayLabel, x, y, textPaint)
-        } else {
-            // Draw the multi-line header
-            val staticLayout = cache.multiLineDayLabelCache.get(key)
-            val y = config.headerRowPadding.toFloat()
-            canvas.withTranslation(x, y) {
-                staticLayout.draw(this)
-            }
         }
     }
 
@@ -58,7 +51,6 @@ internal class DayLabelDrawer<T>(
 
     override fun clear() {
         cache.dayLabelCache.clear()
-        cache.multiLineDayLabelCache.clear()
     }
 
     private fun <E> SparseArray<E>.get(key: Int, providerIfEmpty: () -> E): E {

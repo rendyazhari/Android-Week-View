@@ -32,11 +32,6 @@ internal class MultiLineDayLabelHeightUpdater<T>(
             it to calculateStaticLayoutForDate(it)
         }
 
-        for ((date, multiDayLabel) in multiDayLabels) {
-            val key = date.toEpochDays()
-            cache.multiLineDayLabelCache.put(key, multiDayLabel)
-        }
-
         val staticLayout = multiDayLabels
             .map { it.second }
             .maxBy { it.height }

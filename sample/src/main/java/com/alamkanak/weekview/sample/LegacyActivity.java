@@ -59,12 +59,12 @@ public class LegacyActivity extends AppCompatActivity
 
     @Override
     public void onEventClick(@NonNull Event event, @NonNull RectF eventRect) {
-        Toast.makeText(this, "Clicked " + event.getTitle(), LENGTH_SHORT).show();
+        Toast.makeText(this, "Clicked " + event.getId(), LENGTH_SHORT).show();
     }
 
     @Override
     public void onEventLongClick(@NonNull Event event, @NonNull RectF eventRect) {
-        Toast.makeText(this, "Long-clicked event: " + event.getTitle(), LENGTH_SHORT).show();
+        Toast.makeText(this, "Long-clicked event: " + event.getId(), LENGTH_SHORT).show();
     }
 
     @Override

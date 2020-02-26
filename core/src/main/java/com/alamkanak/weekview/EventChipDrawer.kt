@@ -2,29 +2,20 @@ package com.alamkanak.weekview
 
 import android.content.Context
 import android.graphics.*
-import android.text.SpannableStringBuilder
-import android.text.StaticLayout
-import android.text.style.StyleSpan
 import androidx.core.content.ContextCompat
 import com.alamkanak.weekview.WeekViewEvent.ColorResource
-import com.alamkanak.weekview.WeekViewEvent.TextResource
 
 internal class EventChipDrawer<T>(
     private val context: Context,
-    private val config: WeekViewConfigWrapper,
-    private val emojiTextProcessor: EmojiTextProcessor = EmojiTextProcessor()
+    private val config: WeekViewConfigWrapper
 ) {
-
-    private val textFitter = TextFitter<T>(context, config)
-    private val textLayoutCache = mutableMapOf<Long, StaticLayout>()
 
     private val backgroundPaint = Paint()
     private val borderPaint = Paint()
 
     internal fun draw(
         eventChip: EventChip<T>,
-        canvas: Canvas,
-        textLayout: StaticLayout? = null
+        canvas: Canvas
     ) {
         val event = eventChip.event
 
@@ -50,12 +41,7 @@ internal class EventChipDrawer<T>(
             drawCornersForMultiDayEvents(eventChip, cornerRadius, canvas)
         }
 
-        if (textLayout != null) {
-            // The text height has already been calculated
-            drawEventTitle(eventChip, textLayout, canvas)
-        } else {
-            calculateTextHeightAndDrawTitle(eventChip, canvas)
-        }
+        drawEventImage(eventChip, canvas)
     }
 
     private fun drawCornersForMultiDayEvents(
@@ -117,18 +103,18 @@ internal class EventChipDrawer<T>(
         }
     }
 
-    private fun drawEventTitle(
+    private fun drawEventImage(
         eventChip: EventChip<T>,
-        textLayout: StaticLayout,
         canvas: Canvas
     ) {
         val rect = checkNotNull(eventChip.bounds)
         canvas.apply {
+            val paddingHorizontal = config.eventPaddingHorizontal.toFloat()
             save()
-//            translate(
-//                rect.left + config.eventPaddingHorizontal,
-//                rect.top + config.eventPaddingVertical
-//            )
+            translate(
+                paddingHorizontal,
+                0f
+            )
 
             var offsetX = 0f
             val lenght = if (rect.width() > rect.height()) {
@@ -136,81 +122,16 @@ internal class EventChipDrawer<T>(
                 rect.height()
             } else {
                 rect.width()
-            }
+            } - (paddingHorizontal * 2)
 
             rect.offset(offsetX, (rect.height() / 2) - (lenght / 2))
             rect.bottom = rect.top + lenght
             rect.right = rect.left + lenght
-            val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_launcher)
+            eventChip.event.eventImage?.let { bitmap ->
+                drawBitmap(bitmap, null, rect, null)
+            }
 
-            drawBitmap(bitmap, null, rect, null)
-//            textLayout.draw(this)
             restore()
-        }
-    }
-
-    private fun calculateTextHeightAndDrawTitle(
-        eventChip: EventChip<T>,
-        canvas: Canvas
-    ) {
-        val event = eventChip.event
-        val rect = checkNotNull(eventChip.bounds)
-
-        val fullHorizontalPadding = config.eventPaddingHorizontal * 2
-        val fullVerticalPadding = config.eventPaddingVertical * 2
-
-        val negativeWidth = rect.right - rect.left - fullHorizontalPadding < 0
-        val negativeHeight = rect.bottom - rect.top - fullVerticalPadding < 0
-        if (negativeWidth || negativeHeight) {
-            return
-        }
-
-        val title = when (val resource = event.titleResource) {
-            is TextResource.Id -> context.getString(resource.resId)
-            is TextResource.Value -> resource.text
-            null -> throw IllegalStateException("Invalid title resource: $resource")
-        }
-
-        val location = when (val resource = event.locationResource) {
-            is TextResource.Id -> context.getString(resource.resId)
-            is TextResource.Value -> resource.text
-            null -> null
-        }
-
-        val modifiedTitle = emojiTextProcessor.process(title)
-        val text = SpannableStringBuilder(modifiedTitle)
-        text.setSpan(StyleSpan(Typeface.BOLD))
-
-        val modifiedLocation = location?.let { emojiTextProcessor.process(it) }
-        if (modifiedLocation != null) {
-            text.appendln().append(modifiedLocation)
-        }
-
-        val chipHeight = (rect.bottom - rect.top - fullVerticalPadding).toInt()
-        val chipWidth = (rect.right - rect.left - fullHorizontalPadding).toInt()
-
-        if (chipHeight == 0 || chipWidth == 0) {
-            return
-        }
-
-        val didAvailableAreaChange =
-            eventChip.didAvailableAreaChange(rect, fullHorizontalPadding, fullVerticalPadding)
-        val isCached = textLayoutCache.containsKey(event.id)
-
-        if (didAvailableAreaChange || !isCached) {
-            textLayoutCache[event.id] = textFitter.fit(
-                eventChip = eventChip,
-                title = modifiedTitle,
-                location = modifiedLocation,
-                chipHeight = chipHeight,
-                chipWidth = chipWidth
-            )
-            eventChip.updateAvailableArea(chipWidth, chipHeight)
-        }
-
-        val textLayout = textLayoutCache[event.id] ?: return
-        if (textLayout.height <= chipHeight) {
-            drawEventTitle(eventChip, textLayout, canvas)
         }
     }
 

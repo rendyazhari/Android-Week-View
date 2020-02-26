@@ -48,8 +48,8 @@ internal class AllDayEventsDrawer<T>(
 
         canvas.drawInRect(left, top, right, bottom) {
             val eventChips = cache.allDayEventLayouts
-            for ((eventChip, textLayout) in eventChips) {
-                eventChipDrawer.draw(eventChip, canvas, textLayout)
+            eventChips.forEach { eventChip ->
+                eventChipDrawer.draw(eventChip, canvas)
             }
         }
     }

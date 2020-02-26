@@ -77,6 +77,7 @@
         app:timeColumnTextColor="@color/toolbar_text"
         app:timeColumnTextSize="12sp"
         app:todayHeaderTextColor="@color/accent"
-        app:showMidnightHour="false"/>
+        app:showMidnightHour="false"
+        app:eventPaddingHorizontal="6dp"/>
 
 </LinearLayout>

@@ -57,12 +57,12 @@ class LimitedActivity : AppCompatActivity(), OnEventClickListener<Event>,
     ) = database.getEventsInRange(startDate, endDate)
 
     override fun onEventClick(event: Event, eventRect: RectF) {
-        showToast("Clicked ${event.title}")
+        showToast("Clicked ${event.id}")
     }
 
     override fun onEventLongClick(event: Event, eventRect: RectF) {
-        showToast("Long-clicked ${event.title}")
-        Toast.makeText(this, "Long pressed event: " + event.title, Toast.LENGTH_SHORT).show()
+        showToast("Long-clicked ${event.id}")
+        Toast.makeText(this, "Long pressed event: " + event.id, Toast.LENGTH_SHORT).show()
     }
 
     override fun onEmptyViewLongClick(time: Calendar) {

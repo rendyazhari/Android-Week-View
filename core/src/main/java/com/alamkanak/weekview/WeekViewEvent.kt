@@ -1,22 +1,21 @@
 package com.alamkanak.weekview
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Paint
 import android.text.TextPaint
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
-import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import java.util.Calendar
 import kotlin.math.roundToInt
 
 data class WeekViewEvent<T> internal constructor(
     val id: Long = 0L,
-    internal val titleResource: TextResource? = null,
+    internal val eventImage: Bitmap?,
     val startTime: Calendar = now(),
     val endTime: Calendar = now(),
-    internal val locationResource: TextResource? = null,
     val isAllDay: Boolean = false,
     val style: Style = Style(),
     val data: T? = null
@@ -101,16 +100,6 @@ data class WeekViewEvent<T> internal constructor(
     internal sealed class ColorResource {
         data class Value(@ColorInt val color: Int) : ColorResource()
         data class Id(@ColorRes val resId: Int) : ColorResource()
-    }
-
-    internal sealed class TextResource {
-        data class Value(val text: CharSequence) : TextResource()
-        data class Id(@StringRes val resId: Int) : TextResource()
-
-        fun resolve(context: Context): CharSequence = when (this) {
-            is Id -> context.getString(resId)
-            is Value -> text
-        }
     }
 
     internal sealed class DimenResource {
@@ -199,8 +188,7 @@ data class WeekViewEvent<T> internal constructor(
     ) {
 
         private var id: Long? = null
-        private var title: TextResource? = null
-        private var location: TextResource? = null
+        private var image: Bitmap? = null
         private var startTime: Calendar? = null
         private var endTime: Calendar? = null
         private var style: Style? = null
@@ -211,13 +199,8 @@ data class WeekViewEvent<T> internal constructor(
             return this
         }
 
-        fun setTitle(title: CharSequence): Builder<T> {
-            this.title = TextResource.Value(title)
-            return this
-        }
-
-        fun setTitle(resId: Int): Builder<T> {
-            this.title = TextResource.Id(resId)
+        fun setImage(image: Bitmap): Builder<T> {
+            this.image = image
             return this
         }
 
@@ -228,16 +211,6 @@ data class WeekViewEvent<T> internal constructor(
 
         fun setEndTime(endTime: Calendar): Builder<T> {
             this.endTime = endTime
-            return this
-        }
-
-        fun setLocation(location: CharSequence): Builder<T> {
-            this.location = TextResource.Value(location)
-            return this
-        }
-
-        fun setLocation(resId: Int): Builder<T> {
-            this.location = TextResource.Id(resId)
             return this
         }
 
@@ -253,12 +226,11 @@ data class WeekViewEvent<T> internal constructor(
 
         fun build(): WeekViewEvent<T> {
             val id = checkNotNull(id) { "id == null" }
-            val title = checkNotNull(title) { "title == null" }
             val startTime = checkNotNull(startTime) { "startTime == null" }
             val endTime = checkNotNull(endTime) { "endTime == null" }
             val data = checkNotNull(data) { "data == null" }
             val style = this.style ?: Style.Builder().build()
-            return WeekViewEvent(id, title, startTime, endTime, location, isAllDay, style, data)
+            return WeekViewEvent(id, image, startTime, endTime, isAllDay, style, data)
         }
     }
 }

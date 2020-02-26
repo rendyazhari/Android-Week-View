@@ -53,11 +53,11 @@ class BasicActivity : AppCompatActivity() {
         }
 
         weekView.setOnEventClickListener { event, _ ->
-            showToast("Clicked ${event.title}")
+            showToast("Clicked ${event.id}")
         }
 
         weekView.setOnEventLongClickListener { event, _ ->
-            showToast("Long-clicked ${event.title}")
+            showToast("Long-clicked ${event.id}")
         }
 
         weekView.setOnEmptyViewClickListener { dateTime: LocalDateTime ->
