@@ -5,18 +5,23 @@ import android.util.SparseArray
 import java.util.Calendar
 
 internal class DayLabelDrawer<T>(
-    private val config: WeekViewConfigWrapper,
-    private val cache: WeekViewCache<T>
+        private val view: WeekView<*>,
+        private val config: WeekViewConfigWrapper,
+        private val cache: WeekViewCache<T>
 ) : CachingDrawer {
 
     override fun draw(
-        drawingContext: DrawingContext,
-        canvas: Canvas
+            drawingContext: DrawingContext,
+            canvas: Canvas
     ) {
         val left = config.timeColumnWidth
         val top = 0f
         val right = canvas.width.toFloat()
         val bottom = config.getTotalHeaderHeight()
+
+        canvas.drawInRect(0f, top, right, bottom) {
+            drawHourLabel(this)
+        }
 
         canvas.drawInRect(left, top, right, bottom) {
             drawingContext.dateRangeWithStartPixels.forEach { (date, startPixel) ->
@@ -41,6 +46,13 @@ internal class DayLabelDrawer<T>(
             val y = config.headerRowPadding.toFloat() - textPaint.ascent()
             canvas.drawText(dayLabel, x, y, textPaint)
         }
+    }
+
+    private fun drawHourLabel(canvas: Canvas) {
+        val x = config.timeTextWidth + config.timeColumnPadding
+        val textPaint = config.timeTextPaint
+        val y = config.headerRowPadding.toFloat() - textPaint.ascent()
+        canvas.drawText(view.context.getString(R.string.label_hour), x, y, textPaint)
     }
 
     private fun provideAndCacheDayLabel(key: Int, day: Calendar): String {

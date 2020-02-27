@@ -5,6 +5,7 @@ import android.graphics.PointF
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.text.TextPaint
+import androidx.core.content.ContextCompat
 import com.alamkanak.weekview.Constants.UNINITIALIZED
 import java.util.Calendar
 import kotlin.math.max
@@ -20,6 +21,13 @@ internal class WeekViewConfigWrapper(
     var timeTextPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.RIGHT
         textSize = config.timeColumnTextSize.toFloat()
+        color = config.timeColumnTextColor
+        typeface = config.typeface
+    }
+
+    var halfHourTextPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.RIGHT
+        textSize = config.timeColumnTextSize.toFloat() * 0.90f
         color = config.timeColumnTextColor
         typeface = config.typeface
     }

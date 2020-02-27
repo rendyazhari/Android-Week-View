@@ -4,27 +4,28 @@ import android.graphics.Canvas
 import android.util.SparseArray
 
 internal class TimeColumnDrawer(
-    private val view: WeekView<*>,
-    private val config: WeekViewConfigWrapper
+        private val view: WeekView<*>,
+        private val config: WeekViewConfigWrapper
 ) : CachingDrawer {
 
     private val timeLabelCache = SparseArray<String>()
-    private val halfHourTimeLableCache = SparseArray<String>()
+    private val halfHourTimeLabelCache = SparseArray<String>()
 
     init {
         cacheTimeLabels()
     }
 
-    // TODO: Add 30 minute
     private fun cacheTimeLabels() = with(config) {
         for (hour in startHour until hoursPerDay step timeColumnHoursInterval) {
             timeLabelCache.put(hour, dateTimeInterpreter.interpretTime(hour + minHour))
+            halfHourTimeLabelCache.put(hour, dateTimeInterpreter.interpretTime(hour + minHour, HALF_HOUR_IN_MINUTES))
+            HALF_HOUR_IN_MINUTES
         }
     }
 
     override fun draw(
-        drawingContext: DrawingContext,
-        canvas: Canvas
+            drawingContext: DrawingContext,
+            canvas: Canvas
     ) = with(config) {
         var topMargin = headerHeight
         val bottom = view.height.toFloat()
@@ -51,9 +52,8 @@ internal class TimeColumnDrawer(
                 y += timeTextHeight / 2 + hourSeparatorPaint.strokeWidth + timeColumnPadding
             }
 
-            // TODO: Change with 30
-            canvas.drawText(timeLabelCache[hour], x, y - hourHeight.div(2), timeTextPaint)
             canvas.drawText(timeLabelCache[hour], x, y, timeTextPaint)
+            canvas.drawText(halfHourTimeLabelCache[hour], x, y + hourHeight.div(2), halfHourTextPaint)
 
             if (showTimeColumnHourSeparator && hour > 0) {
                 val j = hour - 1
@@ -78,6 +78,11 @@ internal class TimeColumnDrawer(
 
     override fun clear() {
         timeLabelCache.clear()
+        halfHourTimeLabelCache.clear()
         cacheTimeLabels()
+    }
+
+    companion object {
+        private const val HALF_HOUR_IN_MINUTES = 30
     }
 }

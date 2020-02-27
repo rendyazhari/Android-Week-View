@@ -87,7 +87,7 @@ class WeekView<T : Any> @JvmOverloads constructor(
         NowLineDrawer(configWrapper),
         TimeColumnDrawer(this, configWrapper),
         HeaderRowDrawer(this, configWrapper),
-        DayLabelDrawer(configWrapper, cache),
+        DayLabelDrawer(this, configWrapper, cache),
         AllDayEventsDrawer(context, configWrapper, cache)
     )
 
