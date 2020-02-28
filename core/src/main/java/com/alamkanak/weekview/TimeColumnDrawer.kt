@@ -35,7 +35,7 @@ internal class TimeColumnDrawer(
         val hourLines = FloatArray(hoursPerDay * 4)
         val hourStep = timeColumnHoursInterval
 
-        for (hour in startHour until hoursPerDay step hourStep) {
+        for ((index, hour) in startHour.until(hoursPerDay).step(hourStep).withIndex()) {
             val heightOfHour = (hourHeight * hour)
             topMargin = headerHeight + currentOrigin.y + heightOfHour
 
@@ -52,8 +52,13 @@ internal class TimeColumnDrawer(
                 y += timeTextHeight / 2 + hourSeparatorPaint.strokeWidth + timeColumnPadding
             }
 
+            if (index == 0) {
+                canvas.drawText(dateTimeInterpreter.interpretTime(hour - 1, HALF_HOUR_IN_MINUTES), x, y - hourHeight.div(2), halfHourTextPaint)
+            }
+
             canvas.drawText(timeLabelCache[hour], x, y, timeTextPaint)
             canvas.drawText(halfHourTimeLabelCache[hour], x, y + hourHeight.div(2), halfHourTextPaint)
+
 
             if (showTimeColumnHourSeparator && hour > 0) {
                 val j = hour - 1

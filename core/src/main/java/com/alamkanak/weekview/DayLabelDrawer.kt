@@ -5,14 +5,14 @@ import android.util.SparseArray
 import java.util.Calendar
 
 internal class DayLabelDrawer<T>(
-        private val view: WeekView<*>,
-        private val config: WeekViewConfigWrapper,
-        private val cache: WeekViewCache<T>
+    private val view: WeekView<*>,
+    private val config: WeekViewConfigWrapper,
+    private val cache: WeekViewCache<T>
 ) : CachingDrawer {
 
     override fun draw(
-            drawingContext: DrawingContext,
-            canvas: Canvas
+        drawingContext: DrawingContext,
+        canvas: Canvas
     ) {
         val left = config.timeColumnWidth
         val top = 0f
@@ -52,7 +52,11 @@ internal class DayLabelDrawer<T>(
         val textPaint = config.hourLabelTextPaint
         val x = config.timeTextWidth + config.timeColumnPadding
         val y = config.headerRowPadding.toFloat() - textPaint.ascent()
-        canvas.drawText(view.context.getString(R.string.label_hour), x, y, textPaint.apply { color = config.headerTextPaint.color })
+        canvas.drawText(
+            view.context.getString(R.string.label_hour),
+            x,
+            y,
+            textPaint.apply { color = config.headerTextPaint.color })
     }
 
     private fun provideAndCacheDayLabel(key: Int, day: Calendar): String {
