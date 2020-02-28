@@ -32,6 +32,13 @@ internal class WeekViewConfigWrapper(
         typeface = config.typeface
     }
 
+    val hourLabelTextPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        textAlign = Paint.Align.RIGHT
+        textSize = config.timeColumnTextSize.toFloat() * 0.90f
+        color = config.headerRowTextColor
+        typeface = config.typeface
+    }
+
     var timeTextWidth: Float = 0.toFloat()
 
     var timeTextHeight: Float = 0.toFloat()

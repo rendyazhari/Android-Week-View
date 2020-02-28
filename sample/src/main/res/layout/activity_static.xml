@@ -63,7 +63,7 @@
             app:eventPaddingHorizontal="6dp"
             app:eventTextColor="@android:color/white"
             app:firstDayOfWeek="monday"
-            app:headerRowBackgroundColor="#00000000"
+            app:headerRowBackgroundColor="#000000"
             app:headerRowBottomLineColor="@color/header_bottom_line"
             app:headerRowBottomLineWidth="1dp"
             app:headerRowPadding="8dp"

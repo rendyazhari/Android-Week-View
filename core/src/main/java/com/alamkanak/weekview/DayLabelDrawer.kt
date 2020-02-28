@@ -49,14 +49,10 @@ internal class DayLabelDrawer<T>(
     }
 
     private fun drawHourLabel(canvas: Canvas) {
+        val textPaint = config.hourLabelTextPaint
         val x = config.timeTextWidth + config.timeColumnPadding
-//        val textPaint = config.timeTextPaint.apply {
-//            color = config.headerTextPaint.color
-//        }
-
-        val textPaint = config.timeTextPaint
         val y = config.headerRowPadding.toFloat() - textPaint.ascent()
-        canvas.drawText(view.context.getString(R.string.label_hour), x, y, textPaint)
+        canvas.drawText(view.context.getString(R.string.label_hour), x, y, textPaint.apply { color = config.headerTextPaint.color })
     }
 
     private fun provideAndCacheDayLabel(key: Int, day: Calendar): String {
