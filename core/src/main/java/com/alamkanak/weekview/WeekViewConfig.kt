@@ -152,7 +152,7 @@ internal class WeekViewConfig(
 
             // Header row
             headerRowTextColor = getColor(R.styleable.WeekView_headerRowTextColor, Color.BLACK)
-            headerRowBackgroundColor = getColor(R.styleable.WeekView_headerRowBackgroundColor, Color.WHITE)
+            headerRowBackgroundColor = getColor(R.styleable.WeekView_headerRowBackgroundColor, Color.TRANSPARENT)
             headerRowTextSize = getDimensionPixelSize(R.styleable.WeekView_headerRowTextSize, Defaults.textSize(context))
             headerRowPadding = getDimensionPixelSize(R.styleable.WeekView_headerRowPadding, 10)
             todayHeaderTextColor = getColor(R.styleable.WeekView_todayHeaderTextColor, Defaults.HIGHLIGHT_COLOR)

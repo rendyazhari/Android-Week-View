@@ -14,16 +14,15 @@ internal class HeaderRowDrawer<T : Any>(
         canvas: Canvas
     ) {
         val width = view.width.toFloat()
+
+        // Disable configurable background with custom one
 //        canvas.drawRect(0f, 0f, width, config.headerHeight, config.headerBackgroundPaint)
 
-        val vectorDrawable = VectorDrawableCompat.create(view.context.resources, R.drawable.shape_rectangle_seagreen, null).apply {
-            this?.setBounds(0, 0, width.toInt(), config.headerHeight.toInt())
+        val vectorDrawable = VectorDrawableCompat.create(view.context.resources, R.drawable.shape_rectangle_seagreen, null)
+        vectorDrawable?.run {
+            setBounds(0, 0, width.toInt(), config.headerHeight.toInt())
+            draw(canvas)
         }
-
-        vectorDrawable?.draw(canvas)
-
-//        val bitmap = BitmapFactory.decodeResource(view.context.resources, R.drawable.ic_launcher)
-//        canvas.drawBitmap(bitmap, 0f, 0f, config.headerBackgroundPaint)
 
         if (config.showHeaderRowBottomLine) {
             val top = config.headerHeight - config.headerRowBottomLineWidth
